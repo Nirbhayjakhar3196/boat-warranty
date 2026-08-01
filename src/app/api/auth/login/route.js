@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { loginSchema } from "@/validations/login.validation";
 import { loginUser } from "@/services/auth.service";
-import { success } from "zod";
+import { successResponse, errorResponse } from "@/utils/apiResponse";
 
 export async function POST(request){
 
@@ -14,32 +14,16 @@ export async function POST(request){
 
         const result = await loginUser(validateData)
 
-        return NextResponse.json({
-            success : true,
-            message : "Login Successfully",
-            data : result
-        },{status : 200})
+        return successResponse("Login successful",result,200)
 
 
     } catch (error) {
 
         if (error.name === "ZodError") {
-            return NextResponse.json(
-                {
-                success: false,
-                errors: error.issues,
-                },
-                { status: 400 }
-            );
+            return errorResponse("Validation Error",400,error.issues)
         }
 
-        return NextResponse.json(
-            {
-                success: false,
-                message: error.message,
-            },
-            { status: 401 }
-        );
+        return errorResponse(error.message,500)
         
     }
 
