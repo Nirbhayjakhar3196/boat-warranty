@@ -2,6 +2,7 @@ import {NextResponse} from "next/server";
 
 import {registerUser} from "@/services/auth.service"
 import {registerSchema} from "@/validations/auth.validation"
+import {successResponse , errorResponse} from "@/utils/apiResponse"
 
 
 export async function POST(request){
@@ -14,32 +15,17 @@ export async function POST(request){
 
         const user = await registerUser(validateData);
 
-        return NextResponse.json({
-            success: true,
-            message : "User registered Successfully"
-        },{status : 201})
+        return successResponse("User registered successfully",user,201)
 
     } catch (error) {
         
         console.log(error);
 
         if (error.name === "ZodError") {
-            return NextResponse.json(
-                {
-                success: false,
-                errors: error.issues,
-                },
-                { status: 400 }
-            );
+            return errorResponse("Validation Error",400,error.issues)
         }
 
-        return NextResponse.json(
-            {
-                success: false,
-                message: error.message || "Something went wrong",
-            },
-            { status: 500 }
-        );
+        return errorResponse(error.message,500)
         
     }
 

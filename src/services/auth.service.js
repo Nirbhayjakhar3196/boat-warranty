@@ -4,6 +4,7 @@ import { generateToken } from "@/utils/jwt";
 
 import { findUserByEmail, createUser } from "@/repositories/auth.repository"
 import { use } from "react";
+import { AppError } from "@/utils/AppError";
 
 
 export async function registerUser(userData){
@@ -13,7 +14,7 @@ export async function registerUser(userData){
     const existingUser = await findUserByEmail(email);
 
     if(existingUser){
-        throw new Error("User already registered")
+        throw new AppError("User already registered",409)
     }
 
     const hashedPassword = await bcrypt.hash(password , 10);
@@ -39,7 +40,7 @@ export async function loginUser(userData){
     const user = await findUserByEmail(email)
 
     if(!user){
-        throw new Error("Invalid Email and password")
+        throw new AppError("Invalid Email and password",401)
     }
 
     const IsPasswordMatch = await bcrypt.compare(
@@ -48,7 +49,7 @@ export async function loginUser(userData){
     )
 
     if(!IsPasswordMatch){
-        throw new Error("Invalid Email and password")
+        throw new AppError("Invalid Email and password",401)
     }
 
     const token = generateToken({
