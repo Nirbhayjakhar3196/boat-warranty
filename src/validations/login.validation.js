@@ -1,12 +1,12 @@
-// import {zod} from "zod";
+import {z} from "zod";
 
-// export const loginSchema = zod.object({
+export const loginSchema = z.object({
 
-//     email : zod
-//         .email({message: "Invalid email address"})
-//     ,
-//     password : zod
-//         .string()
-//         .min(6, {message: "Password must be at least 6 characters long"})
+    email : z
+        .email({message: "Invalid email address"})
+    ,
+    password : z
+        .string()
+        .min(6, {message: "Password must be at least 6 characters long"})
 
-// })
+})

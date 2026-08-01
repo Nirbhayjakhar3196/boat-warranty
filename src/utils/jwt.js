@@ -1,7 +1,7 @@
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
-// export function generarateToken (payload){
+export function generateToken (payload){
 
-//     return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '7d'});
-// }
+    return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '7d'});
+}
 
