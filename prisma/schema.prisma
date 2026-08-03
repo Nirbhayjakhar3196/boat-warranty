@@ -44,14 +44,23 @@ model Product {
 }
 
 model RepairHistory {
-  id          Int      @id @default(autoincrement())
+
+  id          Int @id @default(autoincrement())
+
   issue       String
-  repairDate  DateTime
-  status       RepairStatus
+
+  description String?
+
+  status      RepairStatus @default(PENDING)
+
   remarks     String?
 
   createdAt   DateTime @default(now())
 
+  updatedAt   DateTime @updatedAt
+
   productId   Int
-  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  product Product @relation(fields:[productId], references:[id])
+
 }
