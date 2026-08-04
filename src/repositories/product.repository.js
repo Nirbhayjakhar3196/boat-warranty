@@ -17,11 +17,21 @@ export async function findProductBySerial(serialNumber) {
     })
 }
 
-export async function getAllProduct(){
+export async function getAllProduct(skip , limit , search){
 
     return prisma.product.findMany({
+
+        where:{
+            name:{
+                contains : search,
+                mode:"insensitive"
+            }
+        },
+
+        skip,
+        take : limit,
         orderBy:{
-            createdAt : "desc"
+            createdAt : "asc"
         }
     })
 }
