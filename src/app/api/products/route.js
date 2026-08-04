@@ -48,7 +48,11 @@ export async function GET(request){
 
         const search = searchParams.get("search") || "";
 
-        const product = await getAllProductService(page , limit , search)
+        const sortBy = searchParams.get("sortBy") || "id";
+
+        const order = searchParams.get("order") || "asc";
+
+        const product = await getAllProductService(page , limit , search , sortBy , order)
 
         return NextResponse.json({
             success : true,

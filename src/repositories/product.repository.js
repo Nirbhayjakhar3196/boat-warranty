@@ -17,7 +17,7 @@ export async function findProductBySerial(serialNumber) {
     })
 }
 
-export async function getAllProduct(skip , limit , search){
+export async function getAllProduct(skip , limit , search , sortBy , order) {
 
     return prisma.product.findMany({
 
@@ -31,7 +31,7 @@ export async function getAllProduct(skip , limit , search){
         skip,
         take : limit,
         orderBy:{
-            createdAt : "asc"
+            [sortBy]: order
         }
     })
 }
