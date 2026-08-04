@@ -46,7 +46,9 @@ export async function GET(request){
 
         const limit = Number(searchParams.get("limit")) || 5;
 
-        const product = await getAllProductService(page , limit)
+        const search = searchParams.get("search") || "";
+
+        const product = await getAllProductService(page , limit , search)
 
         return NextResponse.json({
             success : true,

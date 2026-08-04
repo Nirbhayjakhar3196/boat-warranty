@@ -16,11 +16,11 @@ export async function createProductService(data , adminId){
     return product
 }
 
-export async function getAllProductService(page , limit) {
+export async function getAllProductService(page , limit, search) {
 
     const skip = (page - 1) * limit;
 
-    return await getAllProduct(skip, limit);
+    return await getAllProduct(skip, limit , search);
 }
 
 export async function getProductByIdService(id) {
