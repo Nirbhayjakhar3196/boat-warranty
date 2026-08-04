@@ -36,14 +36,21 @@ export async function POST(req) {
 
 }
 
-export async function GET(){
+export async function GET(request){
 
     try {
         
-        const product = await getAllProductService();
+        const {searchParams} = new URL(request.url);
+
+        const page = Number(searchParams.get("page")) || 1;
+
+        const limit = Number(searchParams.get("limit")) || 5;
+
+        const product = await getAllProductService(page , limit)
 
         return NextResponse.json({
             success : true,
+            message: "Products fetched successfully",
             data:product
         })
 

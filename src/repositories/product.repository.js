@@ -17,11 +17,14 @@ export async function findProductBySerial(serialNumber) {
     })
 }
 
-export async function getAllProduct(){
+export async function getAllProduct(skip , limit){
 
     return prisma.product.findMany({
+
+        skip,
+        take : limit,
         orderBy:{
-            createdAt : "desc"
+            createdAt : "asc"
         }
     })
 }
