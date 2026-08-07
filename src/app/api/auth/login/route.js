@@ -23,7 +23,7 @@ export async function POST(request){
             return errorResponse("Validation Error",400,error.issues)
         }
 
-        return errorResponse(error.message,500)
+        return errorResponse(error.message, error.statusCode || 500)
         
     }
 

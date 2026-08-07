@@ -1,55 +1,46 @@
-import {prisma} from "@/lib/prisma"
+import { prisma } from "@/lib/prisma";
 
-
-export async function createRepair(data){
-
+export async function createRepair(data) {
     return prisma.repairHistory.create({
         data
-    })
+    });
 }
 
-export async function getAllRepairs(){
-
+export async function getAllRepairs() {
     return prisma.repairHistory.findMany({
         include: {
             product: true
         },
-        orderBy:{
-            createdAt : "desc",
+        orderBy: {
+            createdAt: "desc",
         },
-    })
+    });
 }
 
 export async function getRepairById(id) {
-
     return prisma.repairHistory.findUnique({
-        where:{
+        where: {
             id,
         },
-        include:{
-            product : true
+        include: {
+            product: true
         }
-    })
+    });
 }
 
-export async function updateRepair(id , data) {
-    
+export async function updateRepair(id, data) {
     return prisma.repairHistory.update({
-        where:{
+        where: {
             id
         },
         data
-    })
+    });
 }
 
 export async function deleteRepair(id) {
-    
     return prisma.repairHistory.delete({
-        where:{
+        where: {
             id
         }
-    })
+    });
 }
-
-
-

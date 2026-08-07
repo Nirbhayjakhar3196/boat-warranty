@@ -2,9 +2,9 @@ import { getAllProduct, createProduct , getProductById , updateProduct, deletePr
 
 export async function createProductService(data , adminId){
 
-    const existingUser = await findProductBySerial(data.serialNumber)
+    const existingProduct = await findProductBySerial(data.serialNumber)
 
-    if(existingUser){
+    if(existingProduct){
         throw new Error("Product with this serial number already exist")
     }
 

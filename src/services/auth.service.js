@@ -1,11 +1,7 @@
-
 import bcrypt from "bcryptjs"
 import { generateToken } from "@/utils/jwt";
-
 import { findUserByEmail, createUser } from "@/repositories/auth.repository"
-import { use } from "react";
 import { AppError } from "@/utils/AppError";
-
 
 export async function registerUser(userData){
 
