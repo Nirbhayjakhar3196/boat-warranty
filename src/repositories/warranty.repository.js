@@ -1,9 +1,9 @@
 import { prisma, Prisma } from "@/lib/prisma";
 
-export async function findWarrantyBySerial(serialNumber){
+export async function findWarrantyBySerial(serialNumber) {
 
     return prisma.product.findUnique({
-        where : {
+        where: {
             serialNumber
         },
         include: {

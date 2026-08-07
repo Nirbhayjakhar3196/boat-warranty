@@ -1,5 +1,5 @@
 import { getProductById } from "@/repositories/product.repository";
-import { getAllRepairs , createRepair , getRepairById, updateRepair, deleteRepair } from "@/repositories/repair.repositort";
+import { getAllRepairs , createRepair , getRepairById, updateRepair, deleteRepair } from "@/repositories/repair.repository";
 
 export async function createRepairService(data){
 

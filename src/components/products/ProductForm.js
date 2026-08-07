@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Package, Hash, Tag, Calendar, FileText, Loader2, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
+import Toast from "@/components/common/Toast";
 
 export default function ProductForm({ initialData = null, isEdit = false, onSubmit }) {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function ProductForm({ initialData = null, isEdit = false, onSubm
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [toast, setToast] = useState({ message: "", type: "success" });
 
   useEffect(() => {
     if (initialData) {
@@ -44,26 +46,85 @@ export default function ProductForm({ initialData = null, isEdit = false, onSubm
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const buildPayload = () => {
+    const payload = {
+      serialNumber: formData.serialNumber.trim(),
+      name: formData.name.trim(),
+      model: formData.model.trim(),
+      purchaseDate: new Date(formData.purchaseDate).toISOString(),
+      warrantyExpiry: new Date(formData.warrantyExpiry).toISOString(),
+    };
+
+    const warrantyPdfUrl = formData.warrantyPdfUrl.trim();
+    if (warrantyPdfUrl) {
+      payload.warrantyPdfUrl = warrantyPdfUrl;
+    }
+
+    return payload;
+  };
+
+  const validateForm = () => {
+    const serialNumber = formData.serialNumber.trim();
+    const name = formData.name.trim();
+    const model = formData.model.trim();
+    const purchaseDate = formData.purchaseDate.trim();
+    const warrantyExpiry = formData.warrantyExpiry.trim();
+    const warrantyPdfUrl = formData.warrantyPdfUrl.trim();
+
+    if (!serialNumber || !name || !model || !purchaseDate || !warrantyExpiry) {
+      return "Please fill in all required fields.";
+    }
+
+    const purchaseDateValue = new Date(purchaseDate);
+    const warrantyExpiryValue = new Date(warrantyExpiry);
+
+    if (Number.isNaN(purchaseDateValue.getTime()) || Number.isNaN(warrantyExpiryValue.getTime())) {
+      return "Please enter valid purchase and warranty dates.";
+    }
+
+    if (warrantyExpiryValue <= purchaseDateValue) {
+      return "Warranty expiry must be after the purchase date.";
+    }
+
+    if (warrantyPdfUrl) {
+      try {
+        new URL(warrantyPdfUrl);
+      } catch {
+        return "Please enter a valid warranty PDF URL or leave it empty.";
+      }
+    }
+
+    return "";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setToast({ message: "", type: "success" });
 
-    if (!formData.serialNumber || !formData.name || !formData.model || !formData.purchaseDate || !formData.warrantyExpiry) {
-      setError("Please fill in all required fields.");
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
     setLoading(true);
 
     try {
-      await onSubmit(formData);
-      setSuccess(isEdit ? "Product updated successfully!" : "Product created successfully!");
+      const payload = buildPayload();
+
+      await onSubmit(payload);
+      const successMessage = isEdit ? "Product updated successfully!" : "Product created successfully!";
+      setSuccess(successMessage);
+      setToast({ message: successMessage, type: "success" });
       setTimeout(() => {
         router.push("/products");
       }, 1200);
     } catch (err) {
-      setError(err.message || "Failed to save product. Please check input data.");
+      const message = err?.message || "Failed to save product. Please check input data.";
+      setError(message);
+      setToast({ message, type: "error" });
     } finally {
       setLoading(false);
     }
@@ -71,6 +132,12 @@ export default function ProductForm({ initialData = null, isEdit = false, onSubm
 
   return (
     <div className="w-full max-w-3xl glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl">
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ message: "", type: "success" })}
+      />
+
       <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
         <div>
           <h2 className="text-xl font-bold text-white">
@@ -234,7 +301,7 @@ export default function ProductForm({ initialData = null, isEdit = false, onSubm
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold text-sm shadow-lg shadow-red-600/30 flex items-center space-x-2 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 rounded-xl bg-linear-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold text-sm shadow-lg shadow-red-600/30 flex items-center space-x-2 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
