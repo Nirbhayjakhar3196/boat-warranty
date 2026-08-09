@@ -12,7 +12,7 @@ services:
     ports:
       - "3000:3000"
 
-    command: sh -c "npx prisma db push && npm run dev"
+    command: npm run dev
 
   db:
     image: postgres:16-alpine
